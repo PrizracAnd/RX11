@@ -14,22 +14,41 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Observer;
-import rx.Scheduler;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
-    final static String TAG_OBSERVER = "OBSERVER";
 
+    //-----Constants begin-------------------------------
+    final static String TAG_OBSERVER = "OBSERVER";
+    //-----Constants end---------------------------------
+
+
+    //-----Booleans begin--------------------------------
     private boolean isObservable = true;
 //    private boolean isCompleted = false;
+    //-----Booleans end----------------------------------
 
-    private List<String> stringList = new ArrayList<String>();
 
-    EditText editText;
+    //-----Elements begin--------------------------------
     TextView textView;
+    EditText editText;
+    //-----Elements end----------------------------------
+
+
+    //-----Observables variable begin--------------------
+    Observable myObservable;
+    Observer myObserver;
+    Subscription mySubscription;
+    //-----Observables variable end----------------------
+
+
+    //-----Other variables end---------------------------
+    private List<String> stringList = new ArrayList<String>();
+    //-----Other variables begin-------------------------
 
 
     /////////////////////////////////////////////////////
@@ -40,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textView = (TextView)findViewById(R.id.textView);
+        initializeEditText();
+
+        myObservable = createObservable();
+        myObserver = createObserver();
+        mySubscription = myObservable.subscribe(myObserver);
 
     }
 
@@ -81,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////
     // Method createObservable
     ////////////////////////////////////////////////////
-    private Observable createObservable(final String str){
+    private Observable createObservable(){
         Observable.OnSubscribe<String> onSubscribe = new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
